@@ -12,11 +12,13 @@ int main(void)
 	while (i < 100)
 	{
 
-
-		count++;
-		if (count % 5 == 0)
+		for (j = 1; j <=i; j++)
 		{
-			printf("\n");
+			count++;
+			if (count % 5 == 0)
+			{
+				printf("\n");
+			}
 		}
 		i++;
 	}
