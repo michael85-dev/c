@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+int sum(int x, int y); //함수 선언
+
+int main(void)
+{
+	int a = 10, b = 20;
+	int result;
+
+	result = sum(a, b); // 함수 사용
+	printf("result : %d\n", result);
+
+	return 0;
+}
+
+int sum(int x, int y) // 함수 관련 내용
+{
+	int temp;
+	temp = x + y;
+
+	return temp;
+}
