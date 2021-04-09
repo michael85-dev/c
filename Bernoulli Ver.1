@@ -1,0 +1,216 @@
+#include <stdio.h>
+#include <math.h>
+//Bernoulli Theorem and qeuation
+
+/*
+void bernoulli_pressure(double pressure, double density, double velocity, double height, double gravity);
+void bernoulli_velocity(double pressure, double density, double velocity, double height, double gravity);
+void bernoulli_height(double pressure, double density, double velocity, double height, double gravity);
+*/
+
+int main(void)
+{
+	printf("*************************\n");
+	printf("    베르누이 이론 계산   \n");
+	printf("*************************\n");
+	printf("   P/r + V^2/2 + gz = c  \n");
+	printf("   r = density, g = 9.81 \n");
+	printf("*************************\n");
+
+	//변수 설정
+	double answer1 = 0; // 비압축성 흐름의 정답
+	double answer2 = 0;; // 압축성 흐름의 정답
+	
+	float specific_heat = 0; // 비열비
+ 
+	double pressure = 0; // 압력
+	float density = 0; // 밀도
+	float height = 0; // 높이
+	double velocity = 0; //속도
+
+	float gravity = 9.81f;
+	int gravity_c = 0;
+
+	//중력 값 설정
+	printf("중력의 수치를 변경하시겠습니까? <기본값 9.81(m/s)> YES:1, NO:2 \n");
+	scanf_s("%d", &gravity_c);
+	if (gravity_c == 1)
+	{
+		printf("중력 값을 입력해 주세요: \n");
+		scanf_s("%f", &gravity);
+	}
+	else
+	{
+		printf("중력 값은 9.81(m/s) 입니다.\n");
+	}
+
+	double depth = (double)gravity * height;
+	double speed = ((int)velocity ^ 2) / 2;
+	double weight = pressure / density;
+
+	double specific_r = specific_heat / (specific_heat - 1);
+	double r_depth = specific_r * depth;
+	double r_speed = specific_r * speed;
+	double r_weight = specific_r * weight;
+
+	float constant = 0;
+	printf("상수(c)를 입력해 주세요: \n");
+	scanf_s("%f", &constant);
+
+	int question = 0;
+	printf("비 압축성 흐름입니까? <YES: 1, NO: 2>\n");
+	scanf_s("%d", &question);
+
+	switch (question) {
+	case 1: // 비압축성 흐름의 경우
+		{
+			int select1 = 0;
+			printf("알고 싶은 값이 무엇입니까? <1:압력, 2:속도, 3:높이>\n");
+			scanf_s("%d", &select1);
+
+			switch (select1) {
+			case 1:
+				printf("밀도를 입력하세요(kg/v^3): \n");
+				scanf_s("%f", &density);
+
+				printf("속도를 입력하세요(m/s): \n");
+				scanf_s("%lf", &velocity);
+
+				printf("높이를 입력하세요(m)\n");
+				scanf_s("%f", &height);
+				
+				answer1 = (1 / specific_r) * density * ((double)constant - speed - depth);
+				break;
+			case 2:
+				printf("밀도를 입력하세요: \n");
+				scanf_s("%f", &density);
+
+				printf("압력을 입력하세요(kg/m^2): \n");
+				scanf_s("%lf", &pressure);
+
+				printf("높이를 입력하세요(m)\n");
+				scanf_s("%f", &height);
+
+				
+				answer1 = (double)sqrt(2 * ((double)constant - r_weight - depth));
+				break;
+			case 3:
+				printf("밀도를 입력하세요: \n");
+				scanf_s("%f", &density);
+
+				printf("속도를 입력하세요(m/s): \n");
+				scanf_s("%lf", &velocity);
+
+				printf("압력을 입력하세요(kg/m^2): \n");
+				scanf_s("%lf", &pressure);
+				
+				answer1 = ((double)constant - r_weight - speed);
+				break;
+			default :
+				printf("계산할 수 없습니다.\n");
+				break;
+			}
+			
+
+			printf("원하는 답은 %lf 입니다.\n", answer1);
+			break;
+		}
+		case 2: // 압축성 흐름의 경우
+			printf("비열비를 입력하세요: \n");
+			scanf_s("%f", &specific_heat);
+
+			int select2 = 0;
+			printf("알고 싶은 값이 어떤 것 입니까? <1: 압력, 2:속도, 3:높이>\n");
+			scanf_s("%d", &select2);
+
+			switch (select2) {
+			case 1:
+				printf("밀도를 입력하세요(kg/v^3): \n");
+				scanf_s("%f", &density);
+
+				printf("속도를 입력하세요(m/s): \n");
+				scanf_s("%lf", &velocity);
+
+				printf("높이를 입력하세요(m)\n");
+				scanf_s("%f", &height);
+				
+				answer2 = density * ((double)constant - speed - depth);
+				break;
+			case 2:
+				printf("밀도를 입력하세요: \n");
+				scanf_s("%f", &density);
+
+				printf("압력을 입력하세요(kg/m^2): \n");
+				scanf_s("%lf", &pressure);
+
+				printf("높이를 입력하세요(m)\n");
+				scanf_s("%f", &height);
+
+				
+				answer2 = (double)sqrt(2 * ((double)constant - weight - depth));
+				break;
+			case 3:
+				printf("밀도를 입력하세요: \n");
+				scanf_s("%f", &density);
+
+				printf("속도를 입력하세요(m/s): \n");
+				scanf_s("%lf", &velocity);
+
+				printf("압력을 입력하세요(kg/m^2): \n");
+				scanf_s("%lf", &pressure);
+				
+				answer2 = ((double)constant - weight - speed);
+				break;
+			default:
+				printf("계산할 수 없습니다.\n");
+				break;
+			}
+			
+			printf("원하는 답은 %lf 입니다.\n", answer2);
+			break;
+		default:
+			printf("계산 할 수 없습니다. 조건이 부족합니다.\n");
+	}
+		
+		
+
+}
+
+/*
+void bernoulli_pressure(double pressure, double density, double velocity, double height, double gravity)
+{
+	printf("밀도를 입력하세요(kg/v^3): \n");
+	scanf_s("%lf", &density);
+
+	printf("속도를 입력하세요(m/s): \n");
+	scanf_s("%lf", &velocity);
+
+	printf("높이를 입력하세요(m)\n");
+	scanf_s("%lf", &height);
+
+}
+void bernoulli_velocity(double pressure, double density, double velocity, double height, double gravity)
+{
+	printf("밀도를 입력하세요: \n");
+	scanf_s("%lf", &density);
+
+	printf("압력을 입력하세요(kg/m^2): \n");
+	scanf_s("%lf", &pressure);
+
+	printf("높이를 입력하세요(m)\n");
+	scanf_s("%lf", &height);
+
+}
+void bernoulli_height(double pressure, double density, double velocity, double height, double gravity)
+{
+	printf("밀도를 입력하세요: \n");
+	scanf_s("%lf", &density);
+
+	printf("속도를 입력하세요(m/s): \n");
+	scanf_s("%lf", &velocity);
+
+	printf("압력을 입력하세요(kg/m^2): \n");
+	scanf_s("%lf", &pressure);
+
+}
+*/
