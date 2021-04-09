@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <math.h> //pow 함수 사용
+
+static int NumIntervals = 100;
+//적분하고자 하는 함수 정의
+double Func(double x, double y) {
+    return 1.0/ (1.0 - pow(x,y));
+}
+
+//적분하고자 하는 함수를 함수 포인터로 넘겨서 위에서 정의된 구간의 갯수를 이용하여 적분하는 함수.
+double Integral(double start, double end, double y, double(*func)(doublea, double b))
+{
+    double ans = 0.0;
+    double dx = ((end - start) / (NumIntervals + 1));
+    int i;
+    for (int i = 0; i<= NumIntervals; i++) {
+        ans += func(start + i*dx, y);
+    }
+    ans += dx;
+    return ans;
+}
+
+int main()
+{
+    double start, end, y;
+    int numIntervals;
+    //적분 구간의 시작점, 끝점을 입력받음
+    printf("Enter starting and ending points of interval for integration : ")
+    scanf_s("%lf%lf", &start, &end);
+    fflush(stdin);
+    
+    //y값을 입력 받습니다. 함수의 분모가 0이 되지 않도록 주의 필요
+    printf("Enter a value of y: ");
+    scanf_s("%lf", &y);
+    fflush(stdin);
+    
+    
+    //주어진 구간에서 뉴메리컬 적분을 수행하기 위한 서브 인터벌의 갯수를 입력
+    printf("Enter te number of sub-intervals for numerical integration: ");
+    scanf_s("%d", &numIntervals);
+    fflush(stdin);
+    
+    NumIntervals = numIntervals;
+    
+    double integ = integral(start, end, y, Func);
+    
+    //적분 결과를 출력합니다.
+    
+    printf("Result of integration is %lf\n", integ);
+    
+    //커맨드 화면을 홀드합니다.
+    getchar();
+    
+    return 0;
+}
