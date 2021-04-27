@@ -1,0 +1,185 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+
+double def_pressure();
+double def_velocity();
+double def_height();
+
+int main(void)
+{
+	//기본식 P/rho + V^2/ 2 + gZ = constant;
+	printf("------------------------------");
+	printf("    베르누이 방정식 계산기    ");
+	printf(" P/r + V^2/ 2 + gZ = constant ");
+	printf("------------------------------");
+
+	double c; // constant 가 double로 설정되어도 문제가 없는지?
+
+	float gravity = 9.81f; // gravity의 값은 기본적으로 9.8(m/s^2)
+
+	int check; // do ~ while에서 선택하게 해줄 변수
+
+	int g_num; // 중력 값을 변경할 수 있으므로 해당 부분에 대한 값을 수정 가능하게 선택
+	printf("중력의 기본 값은 9.81(m/s^2)입니다. 변경하시겠습니까?<1: 변경, 2:유지> ");
+	scanf_s("%d", &g_num);
+
+	switch (g_num)
+	{
+	case 1://중력 값을 변경
+		printf("중력 값을 설정해 주세요 <단위: m/s^2> : ");
+		scanf_s("%f", &gravity);
+		printf("중력 값은 %f(m/s^2)으로 선택 되었습니다.\n", gravity);
+		break;
+	default: //중력 값 유지
+		printf("중력 값은 9.81(m/s^2)으로 선택 되었습니다.\n");
+		break;
+	}
+
+	printf("상수 의 값을 입력하세요 : \n");
+	scanf_s("%lf", &c);
+
+	int num; // 모드 선택에 대한 기본 값 변수 입력
+	printf("확인하려는 값을 선택하세요 <1: 압력(N/m^2), 2: 속도(m/s), 3: 높이(mm)> : \n");
+	scanf_s("%d", &num);
+
+	int check;
+
+	double pressure; // 압력 변수
+	float density; // 밀도
+	float velocity; // 속도(m/s)
+	float height; // 높이 (mm)
+	float specific; // 비열비
+
+	switch (num)
+	{
+	case 1: // 압력 관련식
+		printf("비압축성 입니까? <Yes: 1, No: 2>\n");
+		scanf_s("%d", &check);
+		if (check == 1)
+		{
+			printf("압력(N/mm^2)을 구하기 위한 수치 입력입니다.\n");
+			printf("밀도(kg/m^3)를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("속도(m/s)를 입력하세요 : \n");
+			scanf_s("%f", &velocity);
+			printf("높이(mm)를 입력하세요 : \n");
+			scanf_s("%f", &height);
+			//비 압축성 압력 계산
+			//P = rho(c - V^2/2 - gz)
+			pressure = density * (c - velocity * velocity / 2 - gravity * (double)height);
+			printf("비압축성 압력 값은 %.2lf입니다.\n", pressure);
+		}
+		else {
+			
+			printf("압력(N/m^2)을 구하기 위한 수치 입력입니다.\n");
+			printf("밀도(kg/m^3)를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("속도(m/s)를 입력하세요 : \n");
+			scanf_s("%f", &velocity);
+			printf("높이(mm)를 입력하세요 : \n");
+			scanf_s("%f", &height);
+			printf("비열비를 입력하세요 : \n");
+			scanf_s("%f", &specific);
+			//압축성 압력 계산
+			// P = (s-1)/s * 비압축성 압력 값
+
+			pressure = ((double)specific - 1) / (double)specific * density * (c - velocity * velocity / 2 - gravity * (double)height);
+			printf("비압축성 압력 값은 %.2lf입니다.\n", pressure);
+		}
+		break;
+	case 2: // 속도 관련 식
+		printf("비압축성 입니까? <Yes: 1, No: 2>");
+		scanf_s("%d", &check);
+		if (check == 1)
+		{
+			printf("속도(m/s)를 구하기 위한 수치 입력입니다.\n");
+			printf("밀도(kg/m^3)를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("압력(N/m^2)을 입력하세요 : \n");
+			scanf_s("%f", &pressure);
+			printf("높이(mm)를 입력하세요 : \n");
+			scanf_s("%f", &height);
+			
+			//비 압축성 속도 계산
+			// V = sqrt(2(c-P/rho - gz))
+
+			velocity = sqrt(2.0 * (c - pressure / density - (double)gravity * height));
+			printf("비압축성 속력 값은 %.2lf입니다.\n", velocity);
+		}
+		else {
+			printf("속도를 구하기 위한 수치 입력입니다.\n");
+			printf("밀도를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("압력을 입력하세요 : \n");
+			scanf_s("%f", &pressure);
+			printf("높이를 입력하세요 : \n");
+			scanf_s("%f", &height);
+			printf("비열비를 입력하세요 : \n");
+			scanf_s("%f", &specific);
+			
+			//압축성 속도 계산
+			// sqrt(2(c-(s-1)/s*P/rho - gz))
+
+			velocity = sqrt(2.0 * (c - (specific - 1.0) / specific * pressure / density - (double)gravity * height));
+			printf("압축성 속력 값은 %.2lf(m/s)입니다.\n", velocity);
+		}
+		break;
+	case 3: //높이 관련 식
+		printf("비압축성 입니까? <Yes: 1, No: 2>");
+		scanf_s("%d", &check);
+		if (check == 1)
+		{
+			printf("높이(mm)를 구하기 위한 수치 입력입니다.\n");
+			printf("밀도를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("압력(N^2/mm)을 입력하세요 : \n");
+			scanf_s("%f", &pressure);
+			printf("속도(m/s)를 입력하세요 : \n");
+			scanf_s("%f", &velocity);
+
+			//비 압축성 높이 계산
+			// Z = 1/g * (c-P/rho-v^2/2)
+
+			height = 1 / gravity * (c - pressure / density - (double)velocity * velocity / 2.0);
+			printf("비압축성 높이 값은 %.2lf입니다.\n", height);
+		}
+		else {
+			printf("높이(mm)를 구하기 위한 수치 입력입니다.\n");
+			printf("밀도를 입력하세요 : \n");
+			scanf_s("%f", &density);
+			printf("압력(N^2/mm)을 입력하세요 : \n");
+			scanf_s("%f", &pressure);
+			printf("속도(m/s)를 입력하세요 : \n");
+			scanf_s("%f", &velocity);
+			printf("비열비를 입력하세요 : \n");
+			scanf_s("%f", &specific);
+
+			//압축성 높이 계산
+			//Z = 1/g * (c- s/(s-1) * P/rho - V^2/2)
+
+			height = 1 / gravity * (c - specific / (specific - 1.0) * pressure / density - (double)velocity * velocity / 2.0);
+			printf("압축성 높이 값은 %.2lf(mm)입니다.\n", height);
+		}
+		break;
+	default:
+		printf("해당 값은 계산할 수 없습니다.\n");
+		break;
+	}
+}
+
+double def_pressure()
+{
+
+}
+
+double def_velocity()
+{
+
+}
+
+double def_height()
+{
+
+}
